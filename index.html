@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMagic Pro - Enhanced Movie Discovery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+    
+</head>
+<body>
+    <!-- Particle background -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Parallax elements -->
+    <div class="parallax-element parallax-1">🎬</div>
+    <div class="parallax-element parallax-2">🍿</div>
+    <div class="parallax-element parallax-3">🎥</div>
+    
+    <!-- Cursor trail -->
+    <div class="cursor-trail" id="cursor-trail"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">MediaMarkr</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" id="home-link">Home</a></li>
+                    <li><a href="#" class="nav-link" id="discover-link">Discover</a></li>
+                    <li><a href="#" class="nav-link" id="genres-link">Genres</a></li>
+                    <li><a href="#" class="nav-link">My List</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover Cinematic Masterpieces</h1>
+                <p>AI-powered movie recommendations tailored to your taste.</p>
+                <div class="search-container">
+                    <div class="search-box" id="search-box">
+                        <input type="text" id="search-input" placeholder="Search for movies....">
+                        <button id="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="suggestions-box" id="suggestions-box"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Search Results Section -->
+        <section class="search-results-section" id="search-results-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Search Results</h2>
+                <button id="clear-search" style="font-size: 20px; background: none; border: none; color: white; cursor: pointer;"><strong style="font-size: 35px;">x</strong></button>
+            </div>
+            <div class="loader" id="loader"></div>
+            <div class="genre-grid" id="search-results"></div>
+        </section>
+        
+        <!-- Genre Sections -->
+        <section class="genre-section" id="action-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Action Movies</h2>
+                
+            </div>
+            <div class="genre-grid" id="action-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Adventure Films</h2>
+                
+            </div>
+            <div class="genre-grid" id="adventure-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Comedy Favorites</h2>
+                
+            </div>
+            <div class="genre-grid" id="comedy-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Mystery & Thriller</h2>
+                
+            </div>
+            <div class="genre-grid" id="mystery-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Romantic Stories</h2>
+                
+            </div>
+            <div class="genre-grid" id="romance-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Horror Classics</h2>
+                
+            </div>
+            <div class="genre-grid" id="horror-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Sci-Fi Adventures</h2>
+                
+            </div>
+            <div class="genre-grid" id="scifi-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Drama Masterpieces</h2>
+                
+            </div>
+            <div class="genre-grid" id="drama-movies"></div>
+        </section>
+        
+        <section class="genre-section">
+            <div class="genre-header">
+                <h2 class="genre-title">Fantasy Worlds</h2>
+                
+            </div>
+            <div class="genre-grid" id="fantasy-movies"></div>
+        </section>
+        
+        <footer>
+            <p>© 2023 CineMagic Pro - Interactive Movie Recommendations</p>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Movie Detail Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="movie-modal" id="movie-modal">
+            <div class="close-modal" id="close-modal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-content" id="modal-content">
+                <!-- Content will be populated here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        Movie data loaded successfully!
+    </div>
+
+    <script>
+        
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>
