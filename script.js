@@ -485,84 +485,77 @@
         }
 
         // Particle background
-        function initParticleBackground() {
-            const container = document.getElementById('particles');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-            
-            // Particles
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 1500;
-            
-            const posArray = new Float32Array(particlesCount * 3);
-            const colorArray = new Float32Array(particlesCount * 3);
-            
-            for(let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 10;
-                colorArray[i] = Math.random();
-            }
-            
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-            
-            // Material
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.02,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending
-            });
-            
-            // Points mesh
-            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-            
-            camera.position.z = 5;
-            
-            // Mouse move effect
-            let mouseX = 0;
-            let mouseY = 0;
-            
-            document.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-            });
-            
-            // Animation
-            function animate() {
-                requestAnimationFrame(animate);
-                
-                particlesMesh.rotation.x += 0.0005;
-                particlesMesh.rotation.y += 0.001;
-                
-                // Move particles based on mouse position
-                const positions = particlesGeometry.attributes.position.array;
-                for(let i = 0; i < particlesCount; i++) {
-                    const i3 = i * 3;
-                    
-                    // Create a gentle swaying effect based on mouse position
-                    positions[i3] += (mouseX * 0.01 - positions[i3] * 0.01) * 0.1;
-                    positions[i3 + 1] += (mouseY * 0.01 - positions[i3 + 1] * 0.01) * 0.1;
-                }
-                
-                particlesGeometry.attributes.position.needsUpdate = true;
-                
-                renderer.render(scene, camera);
-            }
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-            
-            animate();
+              function initParticleBackground() {
+    const container = document.getElementById('particles');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const particleCount = 5000;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const posArray = new Float32Array(particleCount * 3);
+    const colorArray = new Float32Array(particleCount * 3); // RGB for each particle
+
+    for (let i = 0; i < particleCount; i++) {
+        // Position
+        posArray[i * 3] = (Math.random() - 0.5) * 10;
+        posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        posArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
+
+        // Color (RGB values from 0 to 1)
+        colorArray[i * 3] = Math.random();     // R
+        colorArray[i * 3 + 1] = Math.random(); // G
+        colorArray[i * 3 + 2] = Math.random(); // B
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+        size: 0.01,
+        vertexColors: true,
+        opacity: 0.8,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(particlesGeometry, particleMaterial);
+    scene.add(particles);
+
+    camera.position.z = 5;
+
+    let mouseX = 0, mouseY = 0;
+
+    function onDocumentMouseMove(event) {
+        mouseX = (event.clientX - window.innerWidth / 2) / 100;
+        mouseY = (event.clientY - window.innerHeight / 2) / 100;
+    }
+
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+        particles.rotation.x += 0.0005;
+        particles.rotation.y += 0.0005;
+
+        if (mouseX !== 0 && mouseY !== 0) {
+            particles.rotation.y += mouseX * 0.001;
+            particles.rotation.x += mouseY * 0.001;
         }
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+}
 
         // Smoother cursor trail effect
         function initCursorTrail() {
